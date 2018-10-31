@@ -1,14 +1,26 @@
-<template>    
- <div class="text-xs-center">	 
-	<v-container fluid px-0>
-		<v-card-text v-for="data in questions" :key="data.question">
-			{{data.question}}
-			<answers :dataQuestion="data.answers" :itemKey="data.quetions"/>						
-     		<v-btn v-if="result.length < 1" @click="next()" color="success">SIGUIENTE</v-btn>			
-    </v-card-text>
-		</v-container>
-		<v-dialog v-model="dialog" width="500">	
-			<v-btn  v-if="result.length >= 1" slot="activator" color="red lighten-2" dark > Empezar </v-btn>							
+<template>
+<div class="text-xs-center">
+<v-stepper v-model="e1" v-if="questionsForSteps.length === 8 && !seenButton">
+     <v-stepper-header>
+       <v-stepper-step v-for="(question, index) in questionsForSteps" :key="index" :complete="e1 >index+1" :step="index+1">Pregunta{{e1}} hi {{index+1	}}
+       </v-stepper-step>
+     </v-stepper-header>
+     <v-stepper-items>
+       <v-stepper-content v-for="(question,index) in questionsForSteps" :key="index" :step="index+1">
+         <v-card class="mb-5" color="grey lighten-1" height="350px">
+					 {{question.question}}
+           <answers :dataQuestion="question.answers" :itemKey="question.quetions"/>
+         </v-card>
+         <v-btn color="primary" @click="e1 = index + 2">
+           Continue
+         </v-btn>
+         <v-btn flat>Cancel</v-btn>
+       </v-stepper-content>
+     </v-stepper-items>
+   </v-stepper>
+	  <div v-else>
+	 	<v-dialog v-model="dialog" width="500">
+				<v-btn   slot="activator" color="red lighten-2" dark > Empezar </v-btn>						
 				<v-card>
 					<v-card-title class="headline grey lighten-2" primary-title >
 						A continuación se mostrará su perfil de inversión
@@ -28,8 +40,9 @@
 						<v-btn color="primary" flat @click="sendEmail()"> I accept </v-btn>
 					</v-card-actions>
 				</v-card>
-			</v-dialog>  
- </div>
+			</v-dialog> 
+			</div> 
+	 </div>
 </template>
 <script>
 import firebase from 'firebase'
@@ -39,20 +52,24 @@ import {sendDataMandrill} from '@/plugins/mandrill.js'
 import {perfilValue} from '@/plugins/validatePerfil'
 import {dataProfile} from '@/plugins/dataProfile'
 export default {
-	name:'questions',
+	name:'webcam',
 	props: [],
 	data(){
 		return {
+			items: [{uno:1},{uno:1},{uno:1},{uno:1},{uno:1},{uno:1},{uno:1},{uno:1}],
+			e1: 0,
 			switch1: true,
 			questions: [],
 			result: [],
 			clickNum: 0,
 			valid: false,
 			dialog: false,    
-      email: '',
+			email: '',
+	
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+/.test(v) || 'E-mail must be valid'
+
       ]
 		}
 	},
@@ -76,28 +93,40 @@ export default {
 			}else{
 				this.result.push({question:value.emitQuestion, value:value.emitValue})
 			}
-		})
+		})		
 	},
 	beforeDestroy(){
     EventBus.$off()
   },
 	watch: {},
-	computed:{},
+	computed:{
+		questionsForSteps: function() {
+			let result = [];
+			for(let i = 0;i<this.questions.length;i++){
+				result.push(this.questions[i])
+			}
+			console.log(result)
+			return result
+		},
+		seenButton: function() {
+			if(this.e1===9){
+			return true
+			}else{
+				return false
+			}
+		}
+	},
 	methods:{
 		questionsList(){
+			const noe = []
 				let dataFirebase = firebase.database().ref().child('questions')
 			dataFirebase.on('value', data => {
 				// array de preguntas
 				const arr = data.val()
-				Object.keys(arr).map((element, index) => {
-					Object.defineProperty(arr[element],'quetions',{
-						value: element,
-						writable: true,
-						enumerable: true,
-						configurable: true
-					})
-					this.questions.push(arr[element])
+				Object.keys(arr).forEach((element, index) => {
+					noe.push({answers:arr[element].answers, question: arr[element].question, quetions:element})
 				})
+				this.questions = noe
 			})
 		},
 		next(){
@@ -127,14 +156,20 @@ export default {
 				img = element.img
 			}
 			});
-			sendDataMandrill(this.email, validate, img)			
-			this.$router.push({ name: 'profile', params: { validate: validate, img1: img }})
-			this.result = []
+			sendDataMandrill(this.email, validate, img)
+			this.result.push()
+			this.$router.push({ name: 'profile', params: { validate: validate, img1: img, img2: img2 }})
+			
 		}
 	},
 	components:{answers}
 }
 </script>
 <style scoped>
-
+.v-dialog__activator {
+    position: absolute !important;
+    margin-top: 65% !important;
+    margin-left: 40% !important;
+    z-index: 1 !important;
+}
 </style>

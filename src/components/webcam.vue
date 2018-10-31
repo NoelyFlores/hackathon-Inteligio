@@ -1,13 +1,15 @@
 <template>
-<v-stepper v-model="e1" v-if="questionsForSteps.length === 8">
+<div class="text-xs-center">
+<v-stepper v-model="e1" v-if="questionsForSteps.length === 8 && !seenButton">
      <v-stepper-header>
-       <v-stepper-step v-for="(question, index) in questionsForSteps" :complete="e1 >index+1" :step="index+1">{{question.question}}      {{index}}
+       <v-stepper-step v-for="(question, index) in questionsForSteps" :key="index" :complete="e1 >index+1" :step="index+1">Pregunta{{e1}} hi {{index+1	}}
        </v-stepper-step>
      </v-stepper-header>
      <v-stepper-items>
-       <v-stepper-content v-for="(question,index) in questionsForSteps" :step="index+1">
-         <v-card class="mb-5" color="grey lighten-1" height="200px">
-           
+       <v-stepper-content v-for="(question,index) in questionsForSteps" :key="index" :step="index+1">
+         <v-card class="mb-5" color="grey lighten-1" height="350px">
+					 {{question.question}}
+           <answers :dataQuestion="question.answers" :itemKey="question.quetions"/>
          </v-card>
          <v-btn color="primary" @click="e1 = index + 2">
            Continue
@@ -16,6 +18,31 @@
        </v-stepper-content>
      </v-stepper-items>
    </v-stepper>
+	  <div v-else>
+	 	<v-dialog v-model="dialog" width="500">
+				<v-btn   slot="activator" color="red lighten-2" dark > Empezar </v-btn>						
+				<v-card>
+					<v-card-title class="headline grey lighten-2" primary-title >
+						A continuación se mostrará su perfil de inversión
+					</v-card-title>
+					<v-card-text>
+						Ingrese su correo electrónico y le enviaremos la información de su perfil y portafolio óptimo
+					</v-card-text>				
+					<v-divider></v-divider>
+					<v-card-actions>
+						<v-spacer></v-spacer>
+						<v-text-field
+							v-model="email"
+							:rules="emailRules"
+							label="E-mail"
+							required
+						></v-text-field>
+						<v-btn color="primary" flat @click="sendEmail()"> I accept </v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-dialog> 
+			</div> 
+	 </div>
 </template>
 <script>
 import firebase from 'firebase'
@@ -37,26 +64,12 @@ export default {
 			clickNum: 0,
 			valid: false,
 			dialog: false,    
-      email: '',
+			email: '',
+	
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+/.test(v) || 'E-mail must be valid'
-				/*   <v-stepper v-model="e1">
-    <v-stepper-header>
-      <v-stepper-step v-for="(data, index) in questions" :key="data.quetions" :complete="e1 > (index)" :step="(index)">Pregunta{{e1}} {{(index+1)}}</v-stepper-step>
-      <v-divider></v-divider>
-    </v-stepper-header>
-    <v-stepper-items>
-      <v-stepper-content  v-for="(data, index) in questions" :key="data.quetions" :step="index">
-        <v-card class="mb-5" color="grey lighten-1" height="300px">
-					{{data.question}}
-					<answers :dataQuestion="data.answers" :itemKey="data.quetions"/>
-				</v-card>
-        <v-btn color="primary" @click="e1 = (index+1)"> Continue </v-btn>
-        <v-btn flat>Cancel</v-btn>
-      </v-stepper-content>
-	</v-stepper-items>
-  </v-stepper> */
+
       ]
 		}
 	},
@@ -80,7 +93,7 @@ export default {
 			}else{
 				this.result.push({question:value.emitQuestion, value:value.emitValue})
 			}
-		})
+		})		
 	},
 	beforeDestroy(){
     EventBus.$off()
@@ -94,6 +107,13 @@ export default {
 			}
 			console.log(result)
 			return result
+		},
+		seenButton: function() {
+			if(this.e1===9){
+			return true
+			}else{
+				return false
+			}
 		}
 	},
 	methods:{
@@ -136,13 +156,20 @@ export default {
 				img = element.img
 			}
 			});
-			sendDataMandrill(this.email, validate, img)			
+			sendDataMandrill(this.email, validate, img)
+			this.result.push()
 			this.$router.push({ name: 'profile', params: { validate: validate, img1: img }})
-			this.result = []
+			
 		}
 	},
 	components:{answers}
 }
 </script>
 <style scoped>
+.v-dialog__activator {
+    position: absolute !important;
+    margin-top: 65% !important;
+    margin-left: 40% !important;
+    z-index: 1 !important;
+}
 </style>

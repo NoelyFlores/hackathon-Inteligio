@@ -1,7 +1,8 @@
 <template>
     <div>
-		<h1>{{validate}}</h1>
+		<h1 class="perfil">{{validate}}</h1>
 		<img :src="img1" alt="">
+		<img :src="img2" alt="">
 		<div>
      <v-btn @click="register()" color="success">Registrarme</v-btn>
   	</div>
@@ -17,6 +18,7 @@ export default {
 		return {
 			validate:  this.$route.params.validate,
 			img1:  this.$route.params.img1,
+			img2: this.$route.params.img2
 		}
 	},
 	mounted(){},
@@ -32,5 +34,8 @@ export default {
 }
 </script>
 <style scoped>
-
+.perfil{
+	text-align: center;
+    padding: 1em;
+}
 </style>
