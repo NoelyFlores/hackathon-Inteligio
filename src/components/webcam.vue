@@ -1,20 +1,21 @@
 <template>
-  <v-stepper v-model="e1">
-    <v-stepper-header>
-      <v-stepper-step v-for="(data, index) in questions" :key="data.question" :complete="e1 > (index+1)" :step="(index+1)">Pregunta {{(index+1)}}</v-stepper-step>
-      <v-divider></v-divider>
-    </v-stepper-header>
-    <v-stepper-items>
-      <v-stepper-content  v-for="(data, index) in questions" :key="data.question" :step="index">
-        <v-card class="mb-5" color="grey lighten-1" height="300px">
-					{{data.question}}
-					<answers :dataQuestion="data.answers" :itemKey="data.quetions"/>
-				</v-card>
-        <v-btn color="primary" @click="e1 = (index+1)"> Continue </v-btn>
-        <v-btn flat>Cancel</v-btn>
-      </v-stepper-content>
-	</v-stepper-items>
-  </v-stepper>
+<v-stepper v-model="e1" v-if="questionsForSteps.length === 8">
+     <v-stepper-header>
+       <v-stepper-step v-for="(question, index) in questionsForSteps" :complete="e1 >index+1" :step="index+1">{{question.question}}      {{index}}
+       </v-stepper-step>
+     </v-stepper-header>
+     <v-stepper-items>
+       <v-stepper-content v-for="(question,index) in questionsForSteps" :step="index+1">
+         <v-card class="mb-5" color="grey lighten-1" height="200px">
+           
+         </v-card>
+         <v-btn color="primary" @click="e1 = index + 2">
+           Continue
+         </v-btn>
+         <v-btn flat>Cancel</v-btn>
+       </v-stepper-content>
+     </v-stepper-items>
+   </v-stepper>
 </template>
 <script>
 import firebase from 'firebase'
@@ -28,6 +29,7 @@ export default {
 	props: [],
 	data(){
 		return {
+			items: [{uno:1},{uno:1},{uno:1},{uno:1},{uno:1},{uno:1},{uno:1},{uno:1}],
 			e1: 0,
 			switch1: true,
 			questions: [],
@@ -39,6 +41,22 @@ export default {
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+/.test(v) || 'E-mail must be valid'
+				/*   <v-stepper v-model="e1">
+    <v-stepper-header>
+      <v-stepper-step v-for="(data, index) in questions" :key="data.quetions" :complete="e1 > (index)" :step="(index)">Pregunta{{e1}} {{(index+1)}}</v-stepper-step>
+      <v-divider></v-divider>
+    </v-stepper-header>
+    <v-stepper-items>
+      <v-stepper-content  v-for="(data, index) in questions" :key="data.quetions" :step="index">
+        <v-card class="mb-5" color="grey lighten-1" height="300px">
+					{{data.question}}
+					<answers :dataQuestion="data.answers" :itemKey="data.quetions"/>
+				</v-card>
+        <v-btn color="primary" @click="e1 = (index+1)"> Continue </v-btn>
+        <v-btn flat>Cancel</v-btn>
+      </v-stepper-content>
+	</v-stepper-items>
+  </v-stepper> */
       ]
 		}
 	},
@@ -68,22 +86,27 @@ export default {
     EventBus.$off()
   },
 	watch: {},
-	computed:{},
+	computed:{
+		questionsForSteps: function() {
+			let result = [];
+			for(let i = 0;i<this.questions.length;i++){
+				result.push(this.questions[i])
+			}
+			console.log(result)
+			return result
+		}
+	},
 	methods:{
 		questionsList(){
+			const noe = []
 				let dataFirebase = firebase.database().ref().child('questions')
 			dataFirebase.on('value', data => {
 				// array de preguntas
 				const arr = data.val()
-				Object.keys(arr).map((element, index) => {
-					Object.defineProperty(arr[element],'quetions',{
-						value: element,
-						writable: true,
-						enumerable: true,
-						configurable: true
-					})
-					this.questions.push(arr[element])
+				Object.keys(arr).forEach((element, index) => {
+					noe.push({answers:arr[element].answers, question: arr[element].question, quetions:element})
 				})
+				this.questions = noe
 			})
 		},
 		next(){
@@ -122,5 +145,4 @@ export default {
 }
 </script>
 <style scoped>
-
 </style>
