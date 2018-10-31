@@ -1,65 +1,73 @@
 <template>
-<v-container   text-xs-center >
+<div class="template" > 
+  <v-container class="fom"  text-xs-center >
     <v-layout   align-center justify-center row fill-height id="app">
-        <v-flex lg5>
-  <v-app id="inspire">
-    <v-container>
-<v-form class="inte" ref="form" v-model="valid" lazy-validation>
-      <v-container>
- <img  src="https://raw.githubusercontent.com/OshinVillegas/hackathon-Inteligo/login/src/assets/inteligomediano.png" alt="">
+        <v-flex  lg5>
+
+<v-form   id="inspire" class="inte" ref="form" v-model="valid" lazy-validation>
+  <br>
+      <v-container class="text">
+          Déjanos tus datos  
       </v-container>
       
-      <v-text-field 
+      <v-text-field class='input'
         v-model="name"
         :rules="nameRules"
         :counter="20"
-        label="Nombre"
+        label="Nombre Completo"
         required
       ></v-text-field>
-      <v-text-field
+      <v-text-field class='input'
         v-model="date"
+        :rules="[v => !!v || 'Campo requerido']"
         label="Fecha de Nacimiento"
         required
       ></v-text-field>
-      <v-text-field
+      <v-text-field class='input'
         v-model="phone"
+        :rules="[v => !!v || 'Campo requerido']"
         label="Telefono"
         required
       ></v-text-field>
-       <v-text-field
+      <v-input>
+    
+      </v-input>
+       <v-text-field class='input'
         v-model="email"
         :rules="emailRules"
         label="Correo Electronico"
         required
       ></v-text-field>
-      <v-select
+      <v-select class='input'
         v-model="gender"
         :items="items"
-        :rules="[v => !!v || 'Item is required']"
+        :rules="[v => !!v || 'Campo requerido']"
         label="Genero"
         required
       ></v-select>
-      <v-checkbox
+      <v-checkbox class='input'
         v-model="checkbox"
-        :rules="[v => !!v || 'You must agree to continue!']"
-        label="Do you agree?"
+        label="Todos los datos son correctos"
         required
       ></v-checkbox>
   
-      <v-btn
+      <v-btn round color="rgb(9,25,91)" class="btnRegistrarse"
         :disabled="!valid"
         @click="Registro"
       >
         Registrarse
       </v-btn>
-      <v-btn @click="clear">clear</v-btn>
+      <v-btn round color="rgb(164,164,164)" class="btnBorrar"
+       @click="clear">Limpiar</v-btn>
+       
     </v-form>
-    </v-container>
     
-  </v-app>
   </v-flex>
     </v-layout> 
 </v-container>
+
+</div>
+
     
     
 </template>
@@ -81,11 +89,11 @@ export default {
       items: ["Femenino", "Masculino"],
       checkbox: false,
       emailRules: [
-        v => !!v || "E-mail is required",
+        v => !!v || "Campo requerido",
         v => /.+@.+/.test(v) || "Email invalido"
       ],
       nameRules: [
-        v => !!v || "Name is required",
+        v => !!v || "Campo requerido",
         v => (v && v.length <= 20) || "20"
       ]
     };
@@ -142,9 +150,9 @@ export default {
          </div>`,
 
             text: "Example text content",
-            subject: `Visita de `,
+            "subject": ` Bienvenido a Inteligo ${this.name} `,
             from_email: "villegasoshin25@laboratoria.la",
-            from_name: "Bienvenido a Inteligo",
+            from_name: "Inteligo",
             to: [
               {
                 email: this.email,
@@ -183,11 +191,44 @@ export default {
 </script>
 <style scoped>
 .inte {
+ 
   background: rgb(241, 241, 242);
   border-style: solid;
   border-color: rgb(241, 241, 242);
   border-radius: 3%;
-
 } 
-</style>
+.btnBorrar{
+  margin-bottom: 5%;
+  background: black;
+  color:white;
+  font-family: 'Arial Regular';
+}
+.btnRegistrarse{
+  margin-bottom: 5%;
+  background: black;
+  color:white;
+  font-family: 'Arial Regular';
+}
+label{
+  font-family: 'Arial Regular';
+}
+.input{
+margin-left: 11%;
+margin-right: 11%;
+font-family: 'Arial Regular';
+color: black;
+font-weight: bold;
+}
+.template{
 
+  background: url("https://raw.githubusercontent.com/OshinVillegas/hackathon-Inteligo/develop/src/assets/fondo.png");
+  background-size: cover;
+}
+.text{
+  font-size: 200%;
+  font-family: 'Arial Regular';
+color: black;
+font-weight: bold;
+}
+
+</style>
