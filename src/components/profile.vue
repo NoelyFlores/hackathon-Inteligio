@@ -1,10 +1,18 @@
 <template>
     <div>
 		<h1 class="perfil">{{validate}}</h1>
-		<img :src="img1" alt="">
-		<img :src="img2" alt="">
+		<v-layout row wrap container>
+			<v-flex xs4 offset-xs1>
+				<img :src="img1" alt="">
+			</v-flex>
+			<v-flex xs4 offset-xs3>
+				<img :src="img2" alt="">
+			</v-flex>
+			<v-flex xs4 offset-xs5>
+				<v-btn @click="register()" center blocks color="success">Registrarme</v-btn>
+			</v-flex>
+		</v-layout>
 		<div>
-     <v-btn @click="register()" color="success">Registrarme</v-btn>
   	</div>
 	</div>
 </template>
@@ -16,8 +24,8 @@ export default {
 	props: [],
 	data(){
 		return {
-			validate:  this.$route.params.validate,
-			img1:  this.$route.params.img1,
+			validate: this.$route.params.validate,
+			img1: this.$route.params.img1,
 			img2: this.$route.params.img2
 		}
 	},

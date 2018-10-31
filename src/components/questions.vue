@@ -150,10 +150,12 @@ export default {
 				this.$router.push({ name: 'profile', params: { total1: this.total().total1, total2: this.total().total2 }})
 			} */
 			let img = ""
+			let img2 = ""
 			const validate = perfilValue(this.total().total1, this.total().total2)
 			dataProfile.forEach(element => {
 			if(element.perfil === validate){
 				img = element.img
+				img2 = element.img2
 			}
 			});
 			sendDataMandrill(this.email, validate, img)
