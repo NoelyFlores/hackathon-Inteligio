@@ -1,5 +1,3 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import './plugins/vuetify'
 import App from './App'
@@ -19,7 +17,7 @@ var config = {
   messagingSenderId: "493107654864"
 };
 firebase.initializeApp(config);
-firebase.auth().signInWithEmailAndPassword('admin@gmail.com', '12345678')
+/* firebase.auth().signInWithEmailAndPassword('admin@gmail.com', '12345678')
   .then()
   .catch()
 let app
@@ -32,7 +30,7 @@ firebase.auth().onAuthStateChanged((e) => {
       router
     })
   }
-})
+}) */
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

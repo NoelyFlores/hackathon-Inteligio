@@ -6,6 +6,7 @@ import profile from '@/components/profile'
 import register from '@/components/register'
 import login from '@/components/login'
 import webcam from '@/components/webcam'
+import admin from '@/components/admin'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -24,7 +25,7 @@ export default new Router({
       component: home
     },
     {
-      path:'/profile/:total1/:total2',
+      path:'/profile/:validate',
       name:'profile',
       component:profile
     },
@@ -34,7 +35,7 @@ export default new Router({
       component:register
     },
     {
-      path: '/login',
+      path: '/login/:profile',
       name: 'login',
       component: login
     },
@@ -42,6 +43,11 @@ export default new Router({
       path: '/webcam',
       name: 'webcam',
       component: webcam
-    }   
+    },
+    {
+      path:'/admin',
+      name:'admin',
+      component:admin
+    }  
   ]
 })

@@ -1,55 +1,127 @@
-<template>    
-  <div class="text-xs-center">
-    <v-dialog v-model="dialog" width="500">
-      <v-btn slot="activator" color="red lighten-2" dark > Empezar </v-btn>
-      <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title >
-          Privacy Policy
-        </v-card-title>
-        <v-card-text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" flat @click="dialog = false"> I accept </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+<template>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="desserts"
+    >
+      <template slot="items" slot-scope="props">
+        <td>
+          <v-edit-dialog
+            :return-value.sync="props.item.name"
+            lazy
+            @save="save"
+            @cancel="cancel"
+            @open="open"
+            @close="close"
+          > {{ props.item.name }}
+            <v-text-field
+              slot="input"
+              v-model="props.item.name"
+              :rules="[max25chars]"
+              label="Edit"
+              single-line
+              counter
+            ></v-text-field>
+          </v-edit-dialog>
+        </td>
+        <td class="text-xs-right">{{ props.item.email }}</td>
+        <td class="text-xs-right">{{ props.item.genero }}</td>
+        <td class="text-xs-right">{{ props.item.phone }}</td>
+				<td class="text-xs-right">{{ props.item.fecha }}</td>
+        <td class="text-xs-right">
+          <v-edit-dialog
+            :return-value.sync="props.item.profile"
+            large
+            lazy
+            persistent
+            @save="save"
+            @cancel="cancel"
+            @open="open"
+            @close="close"
+          >
+            <div>{{ props.item.profile }}</div>
+            <div slot="input" class="mt-3 title">Actualizar Perfil</div>
+            <v-text-field
+              slot="input"
+              v-model="props.item.profile"
+              :rules="[max25chars]"
+              label="Edit"
+              single-line
+              counter
+              autofocus
+            ></v-text-field>
+          </v-edit-dialog>
+        </td>
+      </template>
+      <template slot="pageText" slot-scope="{ pageStart, pageStop }">
+        From {{ pageStart }} to {{ pageStop }}
+      </template>
+    </v-data-table>
+    <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
+      {{ snackText }}
+      <v-btn flat @click="snack = false">Close</v-btn>
+    </v-snackbar>
   </div>
 </template>
 <script>
-import firebase from 'firebase'
-export default {
-	name:'questions',
-	props: [],
-	data(){
-		return {
-			questions:[],
-			dialog: false
-		}
-	},
-	mounted(){},
-	created(){
-		this.questionsList()
-	},
-	watch: {},
-	computed:{},
-	methods:{
-		questionsList(){
-				let dataFirebase = firebase.database().ref().child('questions')
+	import firebase from 'firebase'
+  export default {
+    data () {
+      return {
+        snack: false,
+        snackColor: '',
+        snackText: '',
+        max25chars: v => v.length <= 25 || 'Input too long!',
+        pagination: {},
+        headers: [
+          {
+            text: 'Nombre',
+            align: 'left',
+            sortable: false,
+            value: 'name'
+          },
+          { text: 'Email', value: 'calories' },
+          { text: 'Genero', value: 'fat' },
+					{ text: 'Teléfono', value: 'carbs' },
+					{ text: 'F. Nacimiento', value: 'fecha' },
+          { text: 'Perfil', value: 'iron' }
+        ],
+        desserts: []
+      }
+		},
+		created(){
+			console.log('hola')
+			const temp = []
+			let dataFirebase = firebase.database().ref().child('users')
 			dataFirebase.on('value', data => {
 				// array de preguntas
 				const arr = data.val()
-				Object.keys(arr).map(element => {
-					this.questions.push(arr[element].question)
-				})		
+				Object.keys(arr).forEach((element, index) => {
+					temp.push({name:arr[element].nombre, email: arr[element].email, genero: arr[element].genero,phone: arr[element].telefono, profile: arr[element].profile, fecha: arr[element].fecha})
+				})
+				this.desserts = temp
+				console.log(temp)
 			})
-		}
-	},
-	components:{}
-}
+		},
+    methods: {
+      save () {
+        this.snack = true
+        this.snackColor = 'success'
+        this.snackText = 'Data saved'
+      },
+      cancel () {
+        this.snack = true
+        this.snackColor = 'error'
+        this.snackText = 'Canceled'
+      },
+      open () {
+        this.snack = true
+        this.snackColor = 'info'
+        this.snackText = 'Dialog opened'
+      },
+      close () {
+        console.log('Dialog closed')
+      }
+    }
+  }
 </script>
-<style scoped>
-
-</style>

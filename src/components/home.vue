@@ -1,9 +1,18 @@
 <template>
-	<div class="content">
-		<div class="content-home">
+	<div div class="content">
+		<div class="content-home">			
 			<h1 class="titulo">INTELIGO</h1>
-			<h3 class="subtitulo">La mejor bolsa de valores de Lima como estan yo aqui improvisando con las letras para que se vea un poco mejor</h3>
-			<v-btn @click="goQuestions()" color="success lighten-2">Empezar</v-btn>
+			
+		<!-- 	<v-flex xs4 sm1>
+					<v-img src="https://files.slack.com/files-pri/T0NNB6T0R-FDT9A66E4/imagen1.png">
+					</v-img>
+				</v-flex> -->
+			<h3 class="subtitulo">Ofrecemos un servicio personalizado, transparente y profesional en el manejo de sus inversiones, conozca nuestra propuesta de Valor.</h3>
+			<div row wrap container class="text-xs-center ">
+				<v-btn @click="goQuestions()" color="primary" dark >Empezar
+					<v-icon dark right>arrow_forward</v-icon>
+				</v-btn>			
+			</div>
 		</div>     
   </div>
 </template>
@@ -48,17 +57,12 @@ export default {
   text-align: center;
   border-left: 8px solid #FFC107;
   display: inline-block;
-  margin: 15% 0% 5% 10%;
+  margin: 10% 0% 5% 10%;
   padding: 0px 15px;
 }
 .subtitulo{
 	font-size: 25px;
   margin: 0% 0% 5% 10%;
   font-weight: 100;
-}
-.success{
-	width: 20%;
-  margin: 3% 40% 5% 40%;
-	background: #FFC107 !important;
 }
 </style>

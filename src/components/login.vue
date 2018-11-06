@@ -3,13 +3,11 @@
   <v-container class="fom"  text-xs-center >
     <v-layout   align-center justify-center row fill-height id="app">
         <v-flex  lg5>
-
-<v-form   id="inspire" class="inte" ref="form" v-model="valid" lazy-validation>
-  <br>
+        <v-form   id="inspire" class="inte" ref="form" v-model="valid" lazy-validation>
+        <br>
       <v-container class="text">
           Déjanos tus datos  
-      </v-container>
-      
+      </v-container>      
       <v-text-field class='input'
         v-model="name"
         :rules="nameRules"
@@ -29,9 +27,6 @@
         label="Telefono"
         required
       ></v-text-field>
-      <v-input>
-    
-      </v-input>
        <v-text-field class='input'
         v-model="email"
         :rules="emailRules"
@@ -50,26 +45,59 @@
         label="Todos los datos son correctos"
         required
       ></v-checkbox>
-  
-      <v-btn round color="rgb(9,25,91)" class="btnRegistrarse"
-        :disabled="!valid"
-        @click="Registro"
-      >
-        Registrarse
-      </v-btn>
+      <div class="text-xs-center" v-if="show">
+        <v-dialog
+          v-model="dialog"
+          width="500"
+        >
+          <v-btn
+            
+            @click="Registro()"
+            slot="activator"
+            color="blue"
+            class="btnRegistrarse"
+            dark
+          >
+            Registrarse
+          </v-btn>
+
+          <v-card>
+            <v-card-title
+              class="headline grey lighten-2"
+              primary-title
+            >
+               Se registró exitosamente
+            </v-card-title>
+
+            <v-card-text>
+              Se adjuntaron dos documentos de contrato a su correo electrónico, cualquier pregunta al inteligo@gmail.com
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                flat
+                @click="backHome()"
+              >
+                Aceptar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </div>
       <v-btn round color="rgb(164,164,164)" class="btnBorrar"
-       @click="clear">Limpiar</v-btn>
-       
-    </v-form>
-    
+       @click="clear">Limpiar</v-btn>  
+       <v-card-text v-if="none" class="none">
+			  Es obligatorio llenar todos los campos
+				</v-card-text>     
+    </v-form>    
   </v-flex>
     </v-layout> 
 </v-container>
-
 </div>
-
-    
-    
 </template>
 <script>
 import firebase from "firebase";
@@ -79,6 +107,8 @@ export default {
   props: [],
   data() {
     return {
+      dialog: false,
+      profile: this.$route.params.profile,
       tipo: "",
       valid: true,
       name: "",
@@ -95,16 +125,27 @@ export default {
       nameRules: [
         v => !!v || "Campo requerido",
         v => (v && v.length <= 20) || "20"
-      ]
+      ],
+      none: false
     };
   },
   mounted() {},
   created() {},
   watch: {},
-  computed: {},
+  computed: {
+    show: function () {
+      if(this.nombre !== '' && this.telefono !== ''&& this.genero !== '' && this.fecha !== '' && this.email !== ''){
+        return true
+      }else{
+        return false
+      }
+
+    }
+  },
   methods: {
     Registro() {
-      firebase
+      if(this.nombre !== '' && this.telefono !== ''&& this.genero !== '' && this.fecha !== '' && this.email !== ''){
+        firebase
         .database()
         .ref("users/")
         .push({
@@ -112,14 +153,19 @@ export default {
           fecha: this.date,
           genero: this.gender,
           telefono: this.phone,
-          email: this.email
-        });
-      if (this.gender === "Femenino") {
-        this.tipo = "Estimada Sra.";
-      } else {
-        this.tipo = "Estimado Sr.";
+          email: this.email,
+          profile:this.profile
+        })
+        if (this.gender === "Femenino") {
+          this.tipo = "Estimada Sra.";
+        } else {
+          this.tipo = "Estimado Sr.";
+        }
+        this.mandril(this.name);
+      }else{
+        this.none = true
       }
-      this.mandril(this.name);
+      
     },
 
     mandril(pdfBase64String) {
@@ -184,18 +230,19 @@ export default {
     },
     clear() {
       this.$refs.form.reset();
+    },
+    backHome(){       
+      this.$router.push('/home')
     }
   },
   components: {}
 };
 </script>
 <style scoped>
-.inte {
- 
+.inte { 
   background: rgb(241, 241, 242);
   border-style: solid;
   border-color: rgb(241, 241, 242);
-  border-radius: 3%;
 } 
 .btnBorrar{
   margin-bottom: 5%;
@@ -213,22 +260,24 @@ label{
   font-family: 'Arial Regular';
 }
 .input{
-margin-left: 11%;
-margin-right: 11%;
-font-family: 'Arial Regular';
-color: black;
-font-weight: bold;
+  margin-left: 5%;
+  margin-right: 5%;
+  font-weight: 100 !important;
+  font-family: 'Arial Regular';
+
 }
 .template{
-
-  background: url("https://raw.githubusercontent.com/OshinVillegas/hackathon-Inteligo/develop/src/assets/fondo.png");
-  background-size: cover;
+	background: url('https://images.pexels.com/photos/955447/pexels-photo-955447.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260') no-repeat;
+	background-size: cover;
+	height: 100%;
 }
 .text{
   font-size: 200%;
   font-family: 'Arial Regular';
 color: black;
-font-weight: bold;
+font-weight: 100;
 }
-
+.none{
+  color: red
+}
 </style>
