@@ -1,25 +1,28 @@
 # intelligo
 
-> intelligo in hackathon
+Es una aplicación web que permita a los usuarios identificar su perfil como inversionista y registrarse como clientes de
+Inteligo. Esto se hace con el fin de simplificar el proceso de perfilamiento y selección del portafolio óptimo por parte del usuario.
 
-## Build Setup
+## Flujo de Proceso
+### Paso 1 - Conociento el perfil
+- Las preguntas estan presentadas de forma consecutiva.
+- El formulario valida que se ha seleccionado una de las opciones para
+que pueda pasar a la siguiente pregunta presionando el botón “Siguiente”.
+- Al responder las 8 preguntas deberá aparecer una alerta simple, en el que
+te permita enviar la información al correo electrónico.
+Las validaciones se encuentran en la siguiente dirección
 
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-siguiente aplicación web que permita
-a los usuarios identificar su perfil como inversionista y registrarse como clientes de
-Inteligo. Esto se hace con el fin de simplificar el proceso de perfilamiento y
-selección del portafolio óptimo por parte del usuario.
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+![Valores para el grafico](https://scontent.flim6-1.fna.fbcdn.net/v/t1.15752-9/45496803_181878202752590_264782092393512960_n.jpg?_nc_cat=107&_nc_eui2=AeFYntK38CYYDg4BA_drFqVew8tePQbsJQlaTjGmWvvcd4D5HoXeE07qpQKUbLsGGAi2Pje8BHeKD5cCKPIEe0PLGMBJiSYsuTow2joqdFpkmg&_nc_ht=scontent.flim6-1.fna&oh=6fbd7ddd6a4633ad64b673926af20ddf&oe=5C805170)
+### Paso 2 - Registro
+- Al estar de acuerdo con el perfil de inversión se procederá a registrar al
+usuario, dándole clic al botón “Registrarme” de la pantalla “Mi perfil”.
+### Paso 3 - Correo electronico
+- Se enviará un correo automáticamente después de completar el registro.
+- El tratamiento de la persona indicado en el correo dependerá del género
+que haya seleccionado en el registro. Este tratamiento deberá ser seguido
+del primer apellido del usuario.
+### Herramientas
+- Javascritp
+- Vue
+- Vuetify
+- Firebase
