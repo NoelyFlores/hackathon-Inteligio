@@ -45,9 +45,7 @@
 						</v-dialog> 
        </v-stepper-content>
      </v-stepper-items>
-   </v-stepper>
-	  <div v-else>
-			</div> 
+    </v-stepper>
 	 </div>
   </template>
 <script>
@@ -62,37 +60,7 @@ export default {
 	props: [],
 	data(){
 		return {
-			items: [
-			{answers:{
-				answer1:{answer:'hola cero 1', value:2},
-				answer2:{answer:'hola munfo cruwl', value:2},
-				answer3:{answer:'hola cero 2', value:4},
-				answer4:{answer:'hola cero 3', value: 9}},
-				question:'pregunta 02',
-				quetions:'question2'},
-					{answers:{
-				answer1:{answer:'hola cero 1', value:2},
-				answer2:{answer:'hola munfo cruwl', value:2},
-				answer3:{answer:'hola cero 2', value:4},
-				answer4:{answer:'hola cero 3', value: 9}},
-				question:'pregunta 02',
-				quetions:'question2'},
-					{answers:{
-				answer1:{answer:'hola cero 1', value:2},
-				answer2:{answer:'hola munfo cruwl', value:2},
-				answer3:{answer:'hola cero 2', value:4},
-				answer4:{answer:'hola cero 3', value: 9}},
-				question:'pregunta 02',
-				quetions:'question2'},
-					{answers:{
-				answer1:{answer:'hola cero 1', value:2},
-				answer2:{answer:'hola munfo cruwl', value:2},
-				answer3:{answer:'hola cero 2', value:4},
-				answer4:{answer:'hola cero 3', value: 9}},
-				question:'pregunta 02',
-				quetions:'question2'},
-				
-		],
+			items: [],
 			emailNone: false,
 			e1: 0,
 			switch1: true,
@@ -162,9 +130,6 @@ export default {
 				})
 				this.questions = temp
 			})
-		},
-		next(){
-			console.log(this.result.length)			
 		},
 		total(){
 			let x = 0;
